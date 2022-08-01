@@ -103,10 +103,7 @@ function setupConnection(action, partyID, respond) {
         party = data.party;
         self  = data.self;
 
-        if (data.action === 'updateReady')
-            startUpdates();
-        else
-            console.error(`Failed to start updates: got action ${data.action}`);
+        startUpdates();
     };
 }
 
