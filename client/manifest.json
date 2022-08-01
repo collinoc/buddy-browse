@@ -1,0 +1,21 @@
+{
+    "name": "Buddy Browse",
+    "description": "Browse with a buddy",
+    "version": "1.0",
+    "manifest_version": 3,
+    "background": {
+        "service_worker": "background.js"
+    },
+    "host_permissions": [
+        "*://*/*"
+    ],
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "tabs",
+        "storage"
+    ],
+    "action": {
+        "default_popup": "menu.html"
+    }
+  }
