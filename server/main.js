@@ -74,14 +74,14 @@ while (true) {
                 }
 
                 party.memberSocks.push(socket);
-
-                party.members++;
-
+                
                 socket.send(JSON.stringify({
                     action: 'updateReady',
                     party: data.party,
-                    self: party.members - 1,
+                    self: party.members,
                 }));
+                
+                party.members++;
 
                 break;
             }
