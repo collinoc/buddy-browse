@@ -11,6 +11,8 @@ let self  = null;
 const aliveInterval = 2000;
 let   aliveUpdater  = null;
 
+chrome.tabs.onUpdated.addListener(initDot);
+
 // Main logic: Listen for message from popup
 chrome.runtime.onMessage.addListener((request, _sender, respond) => {
     if (party && !ws) {
@@ -109,7 +111,7 @@ function setupConnection(action, partyID, respond) {
 
 function handleUpdate(msg) {
     const data = JSON.parse(msg.data);
-    
+    console.log("Got update:", data);
     runf((data) => {
         const dot = document.getElementById('__party-dot__');
         if (!dot) return;
@@ -126,6 +128,7 @@ async function startUpdates() {
 
     await runf(() => {
         document.onmousemove = (event) => {
+            console.log("Sending:", event);
             chrome.runtime.sendMessage({
                 action: 'update',
                 x: event.pageX,
