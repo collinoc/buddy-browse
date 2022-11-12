@@ -213,7 +213,7 @@ async fn act_on_msg(msg: WsMessage, parties: Parties) {
                 .expect("Missing party to leave from");
 
             for member in party.members.iter_mut() {
-                // if member.id != user_id {
+                if member.id != msg.user.id {
                 member
                     .stream
                     .send(
@@ -223,7 +223,7 @@ async fn act_on_msg(msg: WsMessage, parties: Parties) {
                     )
                     .await
                     .expect(&format!("Couldn't send message to {}", member.id));
-                // }
+                }
             }
         }
         _ => panic!("Should not have gotten {:?} at this point", msg.action),
