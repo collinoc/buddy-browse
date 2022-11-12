@@ -4,7 +4,7 @@
     "version": "1.0",
     "manifest_version": 3,
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "./build/background.js"
     },
     "host_permissions": [
         "*://*/*"
@@ -16,6 +16,6 @@
         "storage"
     ],
     "action": {
-        "default_popup": "menu.html"
+        "default_popup": "./src/html/menu.html"
     }
-  }
+}
