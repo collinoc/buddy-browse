@@ -186,7 +186,7 @@ async fn act_on_msg(msg: WsMessage, parties: Parties) {
             let mut party_lock = parties.write().await;
 
             let party = party_lock
-                .get_mut(&msg.user.party.clone().unwrap())
+                .get_mut(&msg.user.party.clone().expect("Tried to leave empty party"))
                 .expect("Missing party to leave from");
 
             let self_idx = party
@@ -198,7 +198,7 @@ async fn act_on_msg(msg: WsMessage, parties: Parties) {
             party.members.remove(self_idx);
 
             if party.members.len() == 0 {
-                party_lock.remove(&msg.user.party.expect("Tried to leave empty party"));
+                party_lock.remove(&msg.user.party.unwrap());
             }
         }
         Action::Position => {
