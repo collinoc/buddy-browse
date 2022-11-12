@@ -214,15 +214,15 @@ async fn act_on_msg(msg: WsMessage, parties: Parties) {
 
             for member in party.members.iter_mut() {
                 if member.id != msg.user.id {
-                member
-                    .stream
-                    .send(
-                        serde_json::to_string::<WsMessage>(&msg.clone())
-                            .expect("Couldn't convert msg to string")
-                            .into(),
-                    )
-                    .await
-                    .expect(&format!("Couldn't send message to {}", member.id));
+                    member
+                        .stream
+                        .send(
+                            serde_json::to_string::<WsMessage>(&msg.clone())
+                                .expect("Couldn't convert msg to string")
+                                .into(),
+                        )
+                        .await
+                        .expect(&format!("Couldn't send message to {}", member.id));
                 }
             }
         }
