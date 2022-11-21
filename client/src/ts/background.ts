@@ -11,7 +11,6 @@ Util.rtOnMessage((message: Message, _: any, response: Function) => {
 });
 
 const handleMessage = (message: Message) => {
-    console.log("Hold up hoes, I got a message", message);
     switch (message.action) {
         case Action.Create:     createParty(message); break;
         case Action.Join:       joinParty(message); break;

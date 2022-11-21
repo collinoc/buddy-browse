@@ -2,11 +2,9 @@ import './types';
 import * as Util from './util';
 import * as Consts from './consts';
 
-const JOIN_BTN    = <HTMLButtonElement> document.getElementById('join-btn');
-const LEAVE_BTN   = <HTMLButtonElement> document.getElementById('leave-btn');
-const PARTY_ID_IN = <HTMLInputElement>  document.getElementById('party-id');
-
-// Util.cleanup(0);
+const JOIN_BTN = <HTMLButtonElement>document.getElementById('join-btn');
+const LEAVE_BTN = <HTMLButtonElement>document.getElementById('leave-btn');
+const PARTY_ID_IN = <HTMLInputElement>document.getElementById('party-id');
 
 (async () => {
     const myParty: Party = await Util.rtGet(Consts.MyParty);
@@ -30,8 +28,7 @@ const PARTY_ID_IN = <HTMLInputElement>  document.getElementById('party-id');
                 x: 0,
                 y: 0,
             });
-        }
-        else {
+        } else {
             message = Util.createMessage({
                 action: Action.Join,
                 party: ID,
@@ -45,8 +42,9 @@ const PARTY_ID_IN = <HTMLInputElement>  document.getElementById('party-id');
         Util.rtSync({ [Consts.MyParty]: ID });
 
         PARTY_ID_IN.disabled = true;
+        JOIN_BTN.style.display = 'none';
 
-        toggleButtons();
+        // toggleButtons();
     });
 
     LEAVE_BTN?.addEventListener('click', () => {
@@ -74,14 +72,13 @@ const PARTY_ID_IN = <HTMLInputElement>  document.getElementById('party-id');
 
         toggleButtons();
     });
-
 })();
 
 function toggleButtons() {
     if (PARTY_ID_IN.disabled) {
         JOIN_BTN.style.display = 'none';
         LEAVE_BTN.style.display = 'block';
-    }  else {
+    } else {
         LEAVE_BTN.style.display = 'none';
         JOIN_BTN.style.display = 'block';
     }

@@ -8,6 +8,7 @@
         "watch": "webpack --mode=development --watch"
     },
     "dependencies": {
+        "dotenv-webpack": "^8.0.1",
         "ts-loader": "^9.3.1",
         "webpack": "^5.74.0"
     },
