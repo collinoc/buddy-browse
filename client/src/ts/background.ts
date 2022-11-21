@@ -24,7 +24,7 @@ const handleMessage = (message: Message) => {
 
 const sendUpdates = (message: Message) => {
     message.action = Action.Position;
-    ws?.send(JSON.stringify(message));
+    ws?.OPEN ? ws?.send(JSON.stringify(message)) : leaveParty(message);
 }
 
 const updatesReady = (message: Message) => {
@@ -99,7 +99,7 @@ const joinParty = (message: Message) => {
 }
 
 const leaveParty = (message: Message) => {
-    ws?.close();
+    ws?.CLOSING || ws?.CLOSED || ws?.close();
     ws = null;
     myParty = null;
 

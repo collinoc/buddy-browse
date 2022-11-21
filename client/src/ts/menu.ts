@@ -16,30 +16,33 @@ const PARTY_ID_IN = <HTMLInputElement>document.getElementById('party-id');
     }
 
     JOIN_BTN?.addEventListener('click', () => {
-        const ID = PARTY_ID_IN?.value.trim() || null;
+        const PARTY_ID = PARTY_ID_IN?.value.trim() || null;
+        const MY_ID    = Util.randomId();
+
+        console.log(`Joining ${PARTY_ID ?? 'a new party'} using ID ${MY_ID}`);
 
         let message: Message;
 
-        if (ID === null) {
+        if (PARTY_ID === null) {
             message = Util.createMessage({
                 action: Action.Create,
                 party: null,
-                id: Util.randomId(),
+                id: MY_ID,
                 x: 0,
                 y: 0,
             });
         } else {
             message = Util.createMessage({
                 action: Action.Join,
-                party: ID,
-                id: Util.randomId(),
+                party: PARTY_ID,
+                id: MY_ID,
                 x: 0,
                 y: 0,
             });
         }
 
         Util.rtMessage(message);
-        Util.rtSync({ [Consts.MyParty]: ID });
+        Util.rtSync({ [Consts.MyParty]: PARTY_ID });
 
         PARTY_ID_IN.disabled = true;
         JOIN_BTN.style.display = 'none';
@@ -49,7 +52,7 @@ const PARTY_ID_IN = <HTMLInputElement>document.getElementById('party-id');
 
     LEAVE_BTN?.addEventListener('click', () => {
         const ID = PARTY_ID_IN?.value.trim() || null;
-        console.log(ID);
+        console.log(`Leaving ${ID}`);
 
         if (ID == null) {
             console.error('Tried to leave a null party');

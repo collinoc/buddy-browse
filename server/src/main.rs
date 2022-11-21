@@ -56,7 +56,7 @@ type Parties = Arc<RwLock<HashMap<String, Party>>>;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let addr: String = "127.0.0.1:8000".into();
+    let addr: String = "0.0.0.0:8000".into();
 
     let socket = TcpListener::bind(addr).await.expect("Failed to bind");
 
@@ -183,23 +183,7 @@ async fn get_message(rx: &mut SplitStream<WebSocketStream<TcpStream>>) -> Option
 async fn act_on_msg(msg: WsMessage, parties: Parties) {
     match msg.action {
         Action::Leave => {
-            let mut party_lock = parties.write().await;
-
-            let party = party_lock
-                .get_mut(&msg.user.party.clone().expect("Tried to leave empty party"))
-                .expect("Missing party to leave from");
-
-            let self_idx = party
-                .members
-                .iter()
-                .position(|m| m.id == msg.user.id)
-                .unwrap();
-
-            party.members.remove(self_idx);
-
-            if party.members.len() == 0 {
-                party_lock.remove(&msg.user.party.unwrap());
-            }
+            leave_party(&parties, msg.user.id, msg.user.party.unwrap()).await;
         }
         Action::Position => {
             let mut party_lock = parties.write().await;
@@ -214,7 +198,7 @@ async fn act_on_msg(msg: WsMessage, parties: Parties) {
 
             for member in party.members.iter_mut() {
                 if member.id != msg.user.id {
-                    member
+                    match member
                         .stream
                         .send(
                             serde_json::to_string::<WsMessage>(&msg.clone())
@@ -222,10 +206,35 @@ async fn act_on_msg(msg: WsMessage, parties: Parties) {
                                 .into(),
                         )
                         .await
-                        .expect(&format!("Couldn't send message to {}", member.id));
+                    {
+                        Ok(_) => (),
+                        Err(e) => {
+                            eprint!(
+                                "Could not send message from {} to {}\n({e})",
+                                msg.user.id, member.id
+                            );
+                            leave_party(&parties, member.id, msg.user.party.clone().unwrap()).await;
+                        }
+                    }
                 }
             }
         }
         _ => panic!("Should not have gotten {:?} at this point", msg.action),
     };
+}
+
+async fn leave_party(parties: &Parties, user_id: i64, party_str: String) {
+    let mut party_lock = parties.write().await;
+
+    let party = party_lock
+        .get_mut(&party_str)
+        .expect("Missing party to leave from");
+
+    let self_idx = party.members.iter().position(|m| m.id == user_id).unwrap();
+
+    party.members.remove(self_idx);
+
+    if party.members.len() == 0 {
+        party_lock.remove(&party_str);
+    }
 }

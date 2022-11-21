@@ -17,7 +17,7 @@ def main():
     with open('src/html/menu.html') as build_fl:
         menu = build_fl.read()
 
-        menu = menu.replace('{{ BUILD_PATH }}', '.')
+        menu = menu.replace('script defer src="../../build/menu.js"', 'script defer src="menu.js"')
 
         with open('release/menu.html', 'w') as release_fl:
             release_fl.write(menu)
