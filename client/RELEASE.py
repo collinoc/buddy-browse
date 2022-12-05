@@ -6,7 +6,7 @@ def main():
     if os.path.exists('release'):
         shutil.rmtree('release')
 
-    ret_code = subprocess.call(['yarn', 'build'], shell=True)
+    ret_code = subprocess.call('yarn build', shell=True)
 
     if ret_code != 0:
         print(f'Bad build exit code ({ret_code})')
